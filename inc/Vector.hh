@@ -2,6 +2,7 @@
 #define VECTOR_HH
 
 #include "size.hh"
+#include "Dr3D_gnuplot_api.hh"
 #include <iostream>
 
 
@@ -11,13 +12,13 @@
 template <typename TYPE, int SIZE>
 class Vector
 {
-private:
+protected:
     TYPE data[SIZE];
 
 public:
     /*CONSTRUCTORS*/
     Vector();
-    Vector(TYPE data[]);
+    Vector(std::initializer_list <TYPE> list);
 
     /*OPERATORS*/
     const TYPE &operator[](int index) const;
@@ -40,6 +41,8 @@ public:
 
     /*METHODS*/
     double length() const;
+
+    drawNS::Point3D P3D() const;
 };
 
 
@@ -57,8 +60,8 @@ std::istream &operator>>(std::istream &strm, Vector<TYPE, SIZE> &V);
 
 
 /*******************************************
- Typedef of _SIZE_ vector
+ Typedef of 3D vector
 ********************************************/
-typedef Vector<double, _SIZE_> Vector_T;
+typedef Vector<double, _SIZE_> Vector3D;
 
 #endif

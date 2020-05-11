@@ -18,13 +18,20 @@ Vector<TYPE, SIZE>::Vector()
 }
 
 /********************
-  Array constructor 
+  List constructor 
 ********************/
 template <typename TYPE, int SIZE>
-Vector<TYPE, SIZE>::Vector(TYPE *data)
+Vector<TYPE, SIZE>::Vector(std::initializer_list<TYPE> list)
 {
-    for (int i = 0; i < SIZE; i++)
-        this->data[i] = data[i];
+    if(list.size() != SIZE)
+    {
+        cerr << "[!]Incorrect number of arguments in Vector" << endl;
+        exit(1);
+    }
+
+    int i = 0;
+    for (auto arg : list)
+        this->data[i++] = arg;
 }
 
 /**********************
@@ -173,6 +180,20 @@ double Vector<TYPE, SIZE>::length() const
         sum += data[i] * data[i];
     
     return sqrt(sum);
+}
+
+/*********************************
+  Conversion to Point3D
+**********************************/
+template <typename TYPE, int SIZE>
+drawNS::Point3D Vector<TYPE, SIZE>::P3D() const
+{
+    if(SIZE != 3)
+    {
+        cerr << "[!]Conversion not allowed" << endl;
+        exit(1);
+    }
+    return drawNS::Point3D(data[0], data[1], data[2]);
 }
 
 /*********************************

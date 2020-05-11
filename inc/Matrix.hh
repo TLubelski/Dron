@@ -12,19 +12,19 @@ enum Det_method{ Gauss, Sarruss, Bareiss };
 template<typename TYPE, int SIZE>
 class Matrix
 {
-private:
+protected:
     Vector<TYPE, SIZE> data[SIZE]; //kazdemu wierszowi odpowiada wektor
 
     /*METODY WEWNETRZNE*/
-    TYPE det_gauss() const; //pojawil sie problem z dokladnoscia double
+    TYPE det_gauss() const;
     TYPE det_bareiss() const;
     TYPE det_sarruss() const;
 
 public:
     /*KONSTRUKTORY*/
     Matrix(){}
-    Matrix(Vector<TYPE, SIZE> V_arr[]); //przyjmuje tablice wektorow
-    
+    Matrix(std::initializer_list<Vector<TYPE,SIZE>> list); //przyjmuje tablice wektorow
+
     /*OPERATORY*/
     const Vector<TYPE, SIZE> & operator[](int index) const;
     Vector<TYPE, SIZE> & operator[](int index);
@@ -71,6 +71,6 @@ std::istream &operator>>(std::istream &strm, Matrix<TYPE,SIZE> &M); //wczytywani
 /*******************************************
  Typedef of _SIZE_ matrix
 ********************************************/
-typedef Matrix<double, _SIZE_> Matrix_T;
+typedef Matrix<double, _SIZE_> Matrix3D;
 
 #endif

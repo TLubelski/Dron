@@ -7,14 +7,22 @@
 
 using namespace std;
 
+
 /********************
-  Array constructor 
+  List constructor 
 ********************/
 template <typename TYPE, int SIZE>
-Matrix<TYPE, SIZE>::Matrix(Vector<TYPE, SIZE> V_arr[])
+Matrix<TYPE, SIZE>::Matrix(std::initializer_list<Vector<TYPE, SIZE>> list)
 {
-    for (int i = 0; i < SIZE; i++)
-        this->data[i] = V_arr[i];
+    if (list.size() != SIZE)
+    {
+        cerr << "[!]Incorrect number of arguments in Vector" << endl;
+        exit(1);
+    }
+
+    int i = 0;
+    for (auto arg : list)
+        this->data[i++] = arg;
 }
 
 /**********************
