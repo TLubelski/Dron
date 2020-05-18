@@ -182,19 +182,6 @@ double Vector<TYPE, SIZE>::length() const
     return sqrt(sum);
 }
 
-/*********************************
-  Conversion to Point3D
-**********************************/
-template <typename TYPE, int SIZE>
-drawNS::Point3D Vector<TYPE, SIZE>::P3D() const
-{
-    if(SIZE != 3)
-    {
-        cerr << "[!]Conversion not allowed" << endl;
-        exit(1);
-    }
-    return drawNS::Point3D(data[0], data[1], data[2]);
-}
 
 /*********************************
   Output stream operator<<

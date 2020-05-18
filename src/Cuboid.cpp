@@ -4,33 +4,43 @@ using std::vector;
 /*******************************************
  Calculationg Vertexes by dims and center
 ********************************************/
-void Cuboid::calculateVertexArr(double x_dim, double y_dim, double z_dim)
+void Cuboid::calculateVertexArr()
 {
-    x_dim /= 2.0;
-    y_dim /= 2.0;
-    z_dim /= 2.0;
+    double x_dim = dims[0] / 2.0;
+    double y_dim = dims[1] / 2.0;
+    double z_dim = dims[2] / 2.0;
 
+    /* Drawing in (0,0,0) */
     //floor
-    vertexArr[0] = Vector3D({center[0] - x_dim, center[1] - y_dim, center[2] - z_dim});
-    vertexArr[1] = Vector3D({center[0] - x_dim, center[1] + y_dim, center[2] - z_dim});
-    vertexArr[2] = Vector3D({center[0] + x_dim, center[1] + y_dim, center[2] - z_dim});
-    vertexArr[3] = Vector3D({center[0] + x_dim, center[1] - y_dim, center[2] - z_dim});
-    
+    vertexArr[0] = Vector3D({ - x_dim,  - y_dim,  - z_dim});
+    vertexArr[1] = Vector3D({ - x_dim,  + y_dim,  - z_dim});
+    vertexArr[2] = Vector3D({ + x_dim,  + y_dim,  - z_dim});
+    vertexArr[3] = Vector3D({ + x_dim,  - y_dim,  - z_dim});
     //roof
-    vertexArr[4] = Vector3D({center[0] - x_dim, center[1] - y_dim, center[2] + z_dim});
-    vertexArr[5] = Vector3D({center[0] - x_dim, center[1] + y_dim, center[2] + z_dim});
-    vertexArr[6] = Vector3D({center[0] + x_dim, center[1] + y_dim, center[2] + z_dim});
-    vertexArr[7] = Vector3D({center[0] + x_dim, center[1] - y_dim, center[2] + z_dim});
-}
+    vertexArr[4] = Vector3D({ - x_dim,  - y_dim,  + z_dim});
+    vertexArr[5] = Vector3D({ - x_dim,  + y_dim,  + z_dim});
+    vertexArr[6] = Vector3D({ + x_dim,  + y_dim,  + z_dim});
+    vertexArr[7] = Vector3D({ + x_dim,  - y_dim,  + z_dim});
+
+    /* Rotation in (0,0,0) */
+    for (int i = 0; i < 8; i++)
+        vertexArr[i] = orientation * vertexArr[i];
+
+    /* Placing in space */
+    for (int i = 0; i < 8; i++)
+        vertexArr[i] += center;
+} 
 
 /*******************************************
  Redrawing methods
 ********************************************/
 void Cuboid::draw()
 {
+    calculateVertexArr();
+
     id = api->draw_polyhedron(vector<vector<drawNS::Point3D>>{
-        {vertexArr[0].P3D(), vertexArr[1].P3D(), vertexArr[2].P3D(), vertexArr[3].P3D()},
-        {vertexArr[4].P3D(), vertexArr[5].P3D(), vertexArr[6].P3D(), vertexArr[7].P3D()}},
+        {vertexArr[0], vertexArr[1], vertexArr[2], vertexArr[3]},
+        {vertexArr[4], vertexArr[5], vertexArr[6], vertexArr[7]}},
         color);
 }
 
@@ -43,21 +53,4 @@ void Cuboid::redraw()
 {
     erase();
     draw();
-}
-
-/*******************************************
- Relocation methods
-********************************************/
-void Cuboid::rotate(const Rotation &r_matrix)
-{
-    for (int i = 0; i < 8; i++)
-        vertexArr[i] = r_matrix * vertexArr[i];
-    //orientation = orientation * r_matrix;
-
-}
-
-void Cuboid::relocate(const Vector3D &shift)
-{
-    for (int i = 0; i < 8; i++)
-        vertexArr[i] += shift;
 }

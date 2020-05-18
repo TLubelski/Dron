@@ -11,6 +11,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 #ifndef DR3D_API_INT_HH
 #define DR3D_API_INT_HH
 
+#include "Vector.hh"
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -43,6 +45,11 @@ namespace drawNS {
      * \brief deleted non-parametric constructor to force using parametric.
      */
     Point3D() = delete;
+    /*!
+     * \brief Constructor from Vector3D.
+     * \param v - input vector.
+     */
+    Point3D( Vector3D v) : data{v[0], v[1], v[2]} {}
     /*!
      * \brief Constructor
      * \param x - x coord.

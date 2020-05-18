@@ -4,7 +4,7 @@
 
 #Name, headers, sources
 TARGET=Drone
-_DEPS=cmp.hh size.hh Vector.hh Matrix.hh Dr3D_gnuplot_api.hh Draw3D_api_interface.hh Rotation.hh Solid.hh Cuboid.hh Stone.hh Drone.hh
+_DEPS=cmp.hh size.hh Vector.hh Matrix.hh Dr3D_gnuplot_api.hh Draw3D_api_interface.hh Rotation.hh Drawable.hh Solid.hh Cuboid.hh Stone.hh Drone.hh Screw.hh Surface.hh
 _OBJ=main.o cmp.o VectorComp.o MatrixComp.o Dr3D_gnuplot_api.o Cuboid.o Drone.o
 
 ####DIRS###

@@ -1,6 +1,7 @@
 #ifndef ROTATION_HH
 #define ROTATION_HH
 
+#include "cmp.hh"
 #include "Matrix.hh"
 #include <cmath>
 
@@ -13,8 +14,19 @@ class Rotation : public Matrix3D
 {
 public:
     Rotation(){ this->make_I(); }
+    
     Rotation(Axis axis, double angle)
         : Matrix3D( create_matrix(axis, angle) ) { }
+    
+    Rotation(Matrix3D matrix)
+        : Matrix3D(matrix)
+        {
+            if (!cmp(matrix.det(Sarruss), 1) || !cmp(matrix[0] * matrix[1], 0) || !cmp(matrix[0] * matrix[2], 0) || !cmp(matrix[1] * matrix[2], 0) )
+            {
+                std::cerr << "[!] Incorrect rotation matrix" << std::endl;
+                exit(1);
+            }
+        }
 
 private:
     static Matrix3D create_matrix(Axis axis, double angle)

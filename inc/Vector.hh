@@ -2,7 +2,7 @@
 #define VECTOR_HH
 
 #include "size.hh"
-#include "Dr3D_gnuplot_api.hh"
+//#include "Dr3D_gnuplot_api.hh"
 #include <iostream>
 
 
@@ -42,7 +42,6 @@ public:
     /*METHODS*/
     double length() const;
 
-    drawNS::Point3D P3D() const;
 };
 
 
