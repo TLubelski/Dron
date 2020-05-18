@@ -5,19 +5,33 @@
 #include "Matrix.hh"
 #include <cmath>
 
+
+/*!
+* \brief Enum to set rotation angle
+*/
 enum Axis{X_axis = 'x', Y_axis = 'y', Z_axis = 'z'};
 
+
 /*********************************
-  Class of rotation matrix
+  \brief Class of rotation matrix
 **********************************/
 class Rotation : public Matrix3D
 {
 public:
+    /*!
+    * \brief Default constructor make unit matrix
+    */
     Rotation(){ this->make_I(); }
     
+    /*!
+    * \brief Default constructor make unit matrix
+    */
     Rotation(Axis axis, double angle)
         : Matrix3D( create_matrix(axis, angle) ) { }
     
+    /*!
+    * \brief Copy constructor from Matrix3D
+    */
     Rotation(Matrix3D matrix)
         : Matrix3D(matrix)
         {
@@ -29,6 +43,11 @@ public:
         }
 
 private:
+    /*!
+    * \brief Setup roatation matrix
+    * \param axis Axis to rotate around
+    * \param angle Angle of rotation
+    */
     static Matrix3D create_matrix(Axis axis, double angle)
     {
         switch (axis)

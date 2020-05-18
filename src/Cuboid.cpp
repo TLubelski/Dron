@@ -43,14 +43,3 @@ void Cuboid::draw()
         {vertexArr[4], vertexArr[5], vertexArr[6], vertexArr[7]}},
         color);
 }
-
-void Cuboid::erase()
-{
-    api->erase_shape(id);
-}
-
-void Cuboid::redraw()
-{
-    erase();
-    draw();
-}

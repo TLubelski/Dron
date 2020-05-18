@@ -11,10 +11,9 @@ using std::endl;
 using std::vector;
 
 
-
 int main()
 {
-    srand(time(NULL));
+    srand(time(NULL)); //for random generation
     
     int map_radius = 10;
     std::shared_ptr<drawNS::Draw3DAPI> api(new APIGnuPlot3D(-map_radius, map_radius, -map_radius, map_radius, -map_radius, map_radius, -1));

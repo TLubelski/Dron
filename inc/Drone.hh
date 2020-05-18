@@ -4,7 +4,6 @@
 #include "Cuboid.hh"
 #include "Screw.hh"
 
-void wait4key();
 
 /*********************************************
  \brief Class of Drone control interface [WIP]
@@ -15,6 +14,7 @@ public:
     DroneInterface(){}
     virtual void control_panel() = 0;
 };
+
 
 /*************************
  \brief Class of Drone
@@ -31,6 +31,25 @@ protected:
      * \brief Right moving screw
      */
     Screw screw_R;
+
+    /*!
+     * \brief Turning Drone with animation
+     * \param angle Angle of rotation in deg
+     */
+    void turn( double angle);
+
+    /*!
+     * \brief Moving Drone with animation
+     * \param distance Distance to move
+     * \param angle Angle of climbing in deg
+     */
+    void move( double distance, double angle );
+
+    /*!
+     * \brief Method to wait for next frame
+     */
+    void next_frame() const;
+
 
 public:
     /*!
@@ -60,18 +79,7 @@ public:
      */
     void control_panel() override;
 
-    /*!
-     * \brief Turning Drone with animation
-     * \param angle Angle of rotation in deg
-     */
-    void turn( double angle);
-
-    /*!
-     * \brief Moving Drone with animation
-     * \param distance Distance to move
-     * \param angle Angle of climbing in deg
-     */
-    void move( double distance, double angle );
 };
+
 
 #endif

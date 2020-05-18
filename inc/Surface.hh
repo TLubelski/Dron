@@ -8,113 +8,106 @@
 #include <ctime>
 
 
+/****************************************
+ \brief Class of drawable surface
+*****************************************/
 class Surface : public Drawable
 {
 protected:
+    /*!
+     * \brief Stores vertex locations
+     */
     std::vector<std::vector<Vector3D>> vertexArr;
 
+    /*!
+     * \brief Parametric constructor
+     * \param api Shared pointer to gnnuplot api
+     * \param color Color of surface
+     */
     Surface(std::shared_ptr<drawNS::Draw3DAPI> api, std::string color = "black")
     : Drawable(api,color) { }
 
 public:
+    /*!
+     * \brief deleted non-parametric constructor to force using parametric.
+     */
     Surface() = delete;
 
-    virtual void draw() override
-    {
-        std::vector<std::vector<drawNS::Point3D>> output;
-
-        for(auto i : vertexArr)
-            output.push_back( std::vector<drawNS::Point3D>( i.begin(), i.end() ) );
-
-        api->draw_surface(output, color );
-    }
-
-    virtual void erase() override
-    {
-        api->erase_shape(id);
-    }
-
-    virtual void redraw() override
-    {
-        erase();
-        draw();
-    }
+    /*!
+     * \brief Drawing method
+     */
+    virtual void draw() override;
 };
 
 
+/****************************************
+ \brief Class of bottom surface
+*****************************************/
 class Bottom : public Surface
 {
 protected:
-    double noise_gen() const //return random 0-2
-    {
-        double temp;
-        temp = rand() % 20;
-        temp /= 10.0;
-        return temp;
-    }
+    /*!
+     * \brief Return random 0.0 - 2.0
+     */
+    double noise_gen() const;
+
+    /*!
+     * \brief Calculate locations of vertexes
+     */
+    void calculateGemoetry(int radius);
 
 public:
+    /*!
+     * \brief deleted non-parametric constructor to force using parametric.
+     */
     Bottom() = delete;    
     
+     /*!
+     * \brief Parametric constructor
+     * \param api Shared pointer to gnnuplot api
+     * \param radius Radius of map in every dimension
+     */
     Bottom(std::shared_ptr<drawNS::Draw3DAPI> api, int radius)
     : Surface(api, "yellow")
     { 
-        double x = -radius;
-        double y = -radius;
-
-        for(int i = 0; i <= 2*radius; i++)
-        {
-            std::vector<Vector3D> temp;
-            for(int j = 0; j <= 2*radius; j++)
-            {
-                temp.push_back( Vector3D({ x, y, noise_gen()-radius }) );
-                y++;
-            }
-            y = -radius;
-            x++;
-            vertexArr.push_back(temp);
-        }
+        calculateGemoetry(radius);
         draw();
     }
 
 };
 
 
+/****************************************
+ \brief Class of water surface
+*****************************************/
 class Water : public Surface
 {
 protected:
-    double wave_gen() const
-    {
-        double result;
-        static bool phase = true;
-        result = (phase) ? 0 : -0.5;
-        phase = !phase;
-        return result;
-    }
+    /*!
+     * \brief Return 0 or -0.5 ech call
+     */
+    double wave_gen() const;
+    
+    /*!
+     * \brief Calculate locations of vertexes
+     */
+    void calculateGemoetry(int radius);
 
 public:
+    /*!
+     * \brief deleted non-parametric constructor to force using parametric.
+     */
     Water() = delete;
 
+     /*!
+     * \brief Parametric constructor
+     * \param api Shared pointer to gnnuplot api
+     * \param radius Radius of map in every dimension
+     */
     Water(std::shared_ptr<drawNS::Draw3DAPI> api, int radius)
     : Surface(api, "blue") 
     { 
-        double x = -radius;
-        double y = -radius;
-        double z;
-
-        for(int i = 0; i <= 2*radius; i++)
-        {
-            z = wave_gen();
-            std::vector<Vector3D> temp;
-            for(int j = 0; j <= 2*radius; j++)
-            {
-                temp.push_back( Vector3D({ x, y, z+radius }) );
-                y++;
-            }
-            y = -radius;
-            x++;
-            vertexArr.push_back(temp);
-        }
+        calculateGemoetry(radius);
         draw();
     }
 };

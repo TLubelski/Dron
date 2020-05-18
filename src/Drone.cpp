@@ -6,21 +6,6 @@
 
 using namespace std;
 
-#define FPS 60
-
-void next_frame()
-{ 
-    usleep(1000000/FPS); 
-}
-
-void wait4key()
-{
-    do
-    {
-        std::cout << "\n Press a key to continue..." << std::endl;
-    } 
-    while (std::cin.get() != '\n');
-}
 
 /*********************************
  Main Control panel
@@ -101,8 +86,8 @@ void Drone::turn(double angle)
     {
         rotate(Rotation(Z_axis, step));
         redraw();
-        screw_R.animate_t(center, orientation, work_R);
-        screw_L.animate_t(center, orientation, work_L);
+        screw_R.animate(center, orientation, work_R);
+        screw_L.animate(center, orientation, work_L);
         api->redraw();
         next_frame();
     }
@@ -111,7 +96,9 @@ void Drone::turn(double angle)
 void Drone::move(double distance, double angle)
 {
     double step = 0.1;
-    if(distance < 0) step *= (-1); //backward move 
+    if(distance < 0) 
+        step *= (-1); //backward move 
+    
     Vector3D step_vect({0, step ,0});
     step_vect = Rotation(X_axis, angle) * step_vect;
 
@@ -119,9 +106,16 @@ void Drone::move(double distance, double angle)
     {   
         relocate( step_vect );
         redraw();
-        screw_R.animate_m(step_vect);
-        screw_L.animate_m(step_vect);
+        screw_R.animate(center, orientation);
+        screw_L.animate(center, orientation);
         api->redraw();
         next_frame();
     }
+}
+
+#define FPS 60
+
+void Drone::next_frame() const
+{ 
+    usleep(1000000/FPS); 
 }
