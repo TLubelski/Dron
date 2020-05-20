@@ -1,37 +1,43 @@
 #ifndef SCREW_HH
 #define SCREW_HH
 
-#include "Cuboid.hh"
+/*!
+ * \file Screw.hh
+ * File contains Screw class definition
+ */
 
+#include "Hexagon.hh"
 
 /*!
 * \brief Enum to set side of screw
 */
 enum Side{side_L, side_R};
 
-
 /****************************
  \brief Class rotating screw
 ****************************/
-class Screw : public Cuboid
+class Screw : public Hexagon
 {
 private:
-    const Side side;
-    const double d_dims[3];
-    Rotation screw_rot;
-
     /*!
-     * \brief Calculates center point in reference to Drone size
+     * \brief Side of drone to mount on
      */
-    void mount()
-    {
-        center[1] = -(d_dims[1]/2.0 + dims[1]/2.0); //mount to back
-            
-        if( side == side_L ) //mount to left
-                center[0] = -(d_dims[0]/2.0 - dims[2]/2.0);
-            else //mount to right
-                center[0] = (d_dims[0]/2.0 - dims[2]/2.0);
-    }
+    const Side side;
+    
+    /*!
+     * \brief Saved angle of screw
+     */
+    int screw_angle = 0;
+    
+    /*!
+     * \brief Step angle to rotate per frame
+     */
+    int step = 10;
+    
+    /*!
+     * \brief Position in reference to drone
+     */
+    Vector3D screw2drone;
 
 public:
     /*!
@@ -50,10 +56,22 @@ public:
      * \param color Color of figure
      */
     Screw(std::shared_ptr<drawNS::Draw3DAPI> _api, Vector3D d_center, double d_dim_X, double d_dim_Y, double d_dim_Z, Side _side, std::string color = "black") 
-        : Cuboid(_api, d_center, d_dim_Z/4.0, d_dim_Z, d_dim_Z, color), 
-            side(_side), d_dims{d_dim_X, d_dim_Y, d_dim_Z}
+        : Hexagon(_api, d_center, d_dim_Y/4.0, d_dim_Z/2.0, color), side(_side)
         { 
-            mount();
+            screw2drone[1] = -(d_dim_Y/2.0 + height/2.0); //mount to back
+                
+            if( side == side_L ) //mount to left
+            {
+                screw2drone[0] = -(d_dim_X/2.0 - radius);
+            }
+            else //mount to right
+            {
+                screw2drone[0] = (d_dim_X/2.0 - radius);
+                step = -step;
+            }
+            rotate(Rotation(X_axis, 90));
+            center = screw2drone;
+
             draw();
         }    
 
@@ -63,25 +81,21 @@ public:
      * \param d_rotation Rotation matrix of Drone
      * \param working Is now rotating
      */
-    void animate(Vector3D d_center, Rotation d_rotation, bool working = true)
+    void animate_frame(Vector3D d_center, Rotation d_rotation, bool working = true)
     {
-        if( working )
-            screw_rot = screw_rot  * Rotation(Y_axis, 20);
+        if(working)
+        {
+            screw_angle += step;
+            if( abs(screw_angle) == 360)
+                screw_angle = 0;
+        }
 
-        orientation = screw_rot;
-
-        rotate(d_rotation);
-
-        mount();
-        
-        center = d_rotation * center;
-
-        center += d_center;
+        center = d_center + d_rotation * screw2drone; //calculate position
+        orientation =  d_rotation * Rotation(X_axis,90) * Rotation(Z_axis, screw_angle); //calculate orientation
         
         redraw();
     }
 
 };
-
 
 #endif

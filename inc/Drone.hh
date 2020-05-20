@@ -1,9 +1,13 @@
 #ifndef DRONE_HH
 #define DRONE_HH
 
+/*!
+ * \file Drone.hh
+ * File contains drone and drone interface class definition
+ */
+
 #include "Cuboid.hh"
 #include "Screw.hh"
-
 
 /*********************************************
  \brief Class of Drone control interface [WIP]
@@ -31,19 +35,6 @@ protected:
      * \brief Right moving screw
      */
     Screw screw_R;
-
-    /*!
-     * \brief Turning Drone with animation
-     * \param angle Angle of rotation in deg
-     */
-    void turn( double angle);
-
-    /*!
-     * \brief Moving Drone with animation
-     * \param distance Distance to move
-     * \param angle Angle of climbing in deg
-     */
-    void move( double distance, double angle );
 
     /*!
      * \brief Method to wait for next frame
@@ -79,6 +70,18 @@ public:
      */
     void control_panel() override;
 
+    /*!
+     * \brief Turning Drone with animation
+     * \param angle Angle of rotation in deg
+     */
+    void turn( double angle);
+
+    /*!
+     * \brief Moving Drone with animation
+     * \param distance Distance to move
+     * \param angle Angle of climbing in deg
+     */
+    void move( double distance, double angle );
 };
 
 

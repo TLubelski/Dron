@@ -6,8 +6,8 @@ void Surface::draw()
 {
     std::vector<std::vector<drawNS::Point3D>> output;
 
-    for(auto i : vertexArr)
-        output.push_back( std::vector<drawNS::Point3D>( i.begin(), i.end() ) );
+    for(auto vertex : vertexArr)
+        output.push_back( std::vector<drawNS::Point3D>( vertex.begin(), vertex.end() ) );
 
     api->draw_surface(output, color );
 }
@@ -24,6 +24,8 @@ double Bottom::noise_gen() const
 
 void Bottom::calculateGemoetry(int radius)
 {
+    vertexArr.clear();
+
     double x = -radius;
     double y = -radius;
 
@@ -54,21 +56,23 @@ double Water::wave_gen() const
 
 void Water::calculateGemoetry(int radius)
 {
-   double x = -radius;
-        double y = -radius;
-        double z;
+    vertexArr.clear();
+    
+    double x = -radius;
+    double y = -radius;
+    double z;
 
-        for(int i = 0; i <= 2*radius; i++)
+    for(int i = 0; i <= 2*radius; i++)
+    {
+        z = wave_gen();
+        std::vector<Vector3D> temp;
+        for(int j = 0; j <= 2*radius; j++)
         {
-            z = wave_gen();
-            std::vector<Vector3D> temp;
-            for(int j = 0; j <= 2*radius; j++)
-            {
-                temp.push_back( Vector3D({ x, y, z+radius }) );
-                y++;
-            }
-            y = -radius;
-            x++;
-            vertexArr.push_back(temp);
+            temp.push_back( Vector3D({ x, y, z+radius }) );
+            y++;
         }
+        y = -radius;
+        x++;
+        vertexArr.push_back(temp);
+    }
 }

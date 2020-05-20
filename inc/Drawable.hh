@@ -1,8 +1,12 @@
 #ifndef DRAWABLE_HH
 #define DRAWABLE_HH
 
-#include "Dr3D_gnuplot_api.hh"
+/*!
+ * \file Drawable.hh
+ * File contains Drawable class definition
+ */
 
+#include "Dr3D_gnuplot_api.hh"
 
 /*****************************************
  \brief Class of drawable geometry object 

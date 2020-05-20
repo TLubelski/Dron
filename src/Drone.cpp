@@ -30,12 +30,12 @@ void Drone::control_panel()
 
     while(session)
     {
-        cout << "\n#Command: ";
+        cout << "\n# Command: ";
         cin >> input;
         switch (input)
         {
         case 1: //rotate
-            cout << "#Angle ([+]left, [-]right):";
+            cout << "# Angle in deg ([+]left, [-]right): ";
             cin >> angle;
             cout << "[Action] Rotating..." << endl;
             turn( angle);
@@ -43,13 +43,13 @@ void Drone::control_panel()
             break;
         
         case 2: //move
-            cout << "#Distance ([+]forward, [-]backward):";
+            cout << "# Distance ([+]forward, [-]backward): ";
             cin >> distance;
-            cout << "#Climb angle ([+]up, [-]down):";
+            cout << "# Climb angle in deg ([+]up, [-]down): ";
             cin >> angle;
             cout << "[Action] Moving..." << endl;
             move(distance, angle);
-            cout << "[Info] Moved " << fabs(distance) << " units " << ( distance>0 ? "forward" : "backward") << " with " << angle << "deg angle." << endl;
+            cout << "[Info] Moved " << fabs(distance) << " units " << ( distance>0 ? "forward" : "backward") << " with " << angle << "deg climb angle." << endl;
             break;
 
         case 0: //exit
@@ -86,8 +86,8 @@ void Drone::turn(double angle)
     {
         rotate(Rotation(Z_axis, step));
         redraw();
-        screw_R.animate(center, orientation, work_R);
-        screw_L.animate(center, orientation, work_L);
+        screw_R.animate_frame(center, orientation, work_R);
+        screw_L.animate_frame(center, orientation, work_L);
         api->redraw();
         next_frame();
     }
@@ -96,8 +96,13 @@ void Drone::turn(double angle)
 void Drone::move(double distance, double angle)
 {
     double step = 0.1;
-    if(distance < 0) 
-        step *= (-1); //backward move 
+    
+    if(distance < 0) //backward move
+    {
+        step *= (-1); 
+        angle = -angle; 
+    } 
+
     
     Vector3D step_vect({0, step ,0});
     step_vect = Rotation(X_axis, angle) * step_vect;
@@ -106,8 +111,8 @@ void Drone::move(double distance, double angle)
     {   
         relocate( step_vect );
         redraw();
-        screw_R.animate(center, orientation);
-        screw_L.animate(center, orientation);
+        screw_R.animate_frame(center, orientation);
+        screw_L.animate_frame(center, orientation);
         api->redraw();
         next_frame();
     }

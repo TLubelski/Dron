@@ -1,6 +1,11 @@
 #ifndef STONE_HH
 #define STONE_HH
 
+/*!
+ * \file Stone.hh
+ * File contains Stone class definition
+ */
+
 #include "Cuboid.hh"
 
 /**************************

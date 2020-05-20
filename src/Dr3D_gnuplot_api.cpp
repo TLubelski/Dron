@@ -215,3 +215,4 @@ void APIGnuPlot3D::redraw() {
     if (refresh_rate_ms < 0)
      draw_all_shapes();
 }
+

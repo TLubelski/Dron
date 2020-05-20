@@ -1,9 +1,13 @@
 #ifndef SCENE_HH
 #define SCENE_HH
 
+/*!
+ * \file Scene.hh
+ * File contains Scene class definition
+ */
+
 #include "Surface.hh"
 #include "Stone.hh"
-
 
 /*********************************************
  \brief Class of drawing scene

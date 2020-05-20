@@ -1,8 +1,12 @@
 #ifndef CUBOID_HH
 #define CUBOID_HH
 
-#include "Solid.hh"
+/*!
+ * \file Cuboid.hh
+ * File contains cuboid class definition
+ */
 
+#include "Solid.hh"
 
 /***********************
  \brief Class of cuboid 
@@ -13,7 +17,7 @@ protected:
     /*!
      * \brief Stores location of 8 vertexes
      */
-    Vector3D vertexArr[8];
+    std::vector<Vector3D> vertexArr;
     
     /*!
      * \brief Stores dimensions of figure
@@ -34,7 +38,8 @@ protected:
      * \param color Color of figure
      */
     Cuboid(std::shared_ptr<drawNS::Draw3DAPI> _api, Vector3D _center, double x_dim, double y_dim, double z_dim, std::string color = "black")
-        : Solid(_api, _center, color), dims{x_dim, y_dim, z_dim} { } 
+        : Solid(_api, _center, color), dims{x_dim, y_dim, z_dim} 
+            { vertexArr.reserve(8); } 
 
 public:
     /*!

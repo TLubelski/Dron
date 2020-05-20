@@ -1,4 +1,5 @@
 #include "Cuboid.hh"
+
 using std::vector;
 
 /*******************************************
@@ -11,24 +12,22 @@ void Cuboid::calculateVertexArr()
     double z_dim = dims[2] / 2.0;
 
     /* Drawing in (0,0,0) */
-    //floor
-    vertexArr[0] = Vector3D({ - x_dim,  - y_dim,  - z_dim});
-    vertexArr[1] = Vector3D({ - x_dim,  + y_dim,  - z_dim});
-    vertexArr[2] = Vector3D({ + x_dim,  + y_dim,  - z_dim});
-    vertexArr[3] = Vector3D({ + x_dim,  - y_dim,  - z_dim});
-    //roof
-    vertexArr[4] = Vector3D({ - x_dim,  - y_dim,  + z_dim});
-    vertexArr[5] = Vector3D({ - x_dim,  + y_dim,  + z_dim});
-    vertexArr[6] = Vector3D({ + x_dim,  + y_dim,  + z_dim});
-    vertexArr[7] = Vector3D({ + x_dim,  - y_dim,  + z_dim});
+    vertexArr =
+    {
+        { - x_dim,  - y_dim,  - z_dim}, //bottom
+        { - x_dim,  + y_dim,  - z_dim},
+        { + x_dim,  + y_dim,  - z_dim},
+        { + x_dim,  - y_dim,  - z_dim},
 
-    /* Rotation in (0,0,0) */
-    for (int i = 0; i < 8; i++)
-        vertexArr[i] = orientation * vertexArr[i];
+        { - x_dim,  - y_dim,  + z_dim}, //top
+        { - x_dim,  + y_dim,  + z_dim},
+        { + x_dim,  + y_dim,  + z_dim},
+        { + x_dim,  - y_dim,  + z_dim},
+    };
 
-    /* Placing in space */
-    for (int i = 0; i < 8; i++)
-        vertexArr[i] += center;
+    /* Rotation in (0,0,0) and placing*/
+    for (auto &vertex : vertexArr)
+        vertex = orientation * vertex + center;
 } 
 
 /*******************************************
@@ -39,7 +38,8 @@ void Cuboid::draw()
     calculateVertexArr();
 
     id = api->draw_polyhedron(vector<vector<drawNS::Point3D>>{
-        {vertexArr[0], vertexArr[1], vertexArr[2], vertexArr[3]},
-        {vertexArr[4], vertexArr[5], vertexArr[6], vertexArr[7]}},
+        vector<drawNS::Point3D>(vertexArr.begin(), vertexArr.begin() + 4),
+        vector<drawNS::Point3D>(vertexArr.end() - 4, vertexArr.end() ) },
         color);
 }
+

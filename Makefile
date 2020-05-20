@@ -4,8 +4,8 @@
 
 #Name, headers, sources
 TARGET=Drone
-_DEPS=cmp.hh size.hh Vector.hh Matrix.hh Dr3D_gnuplot_api.hh Draw3D_api_interface.hh Rotation.hh Drawable.hh Solid.hh Cuboid.hh Stone.hh Drone.hh Screw.hh Surface.hh
-_OBJ=main.o cmp.o VectorComp.o MatrixComp.o Dr3D_gnuplot_api.o Cuboid.o Drone.o Surface.o
+_DEPS=cmp.hh size.hh Vector.hh Matrix.hh Dr3D_gnuplot_api.hh Draw3D_api_interface.hh Rotation.hh Drawable.hh Solid.hh Cuboid.hh Hexagon.hh Stone.hh Drone.hh Screw.hh Surface.hh
+_OBJ=main.o cmp.o VectorComp.o MatrixComp.o Dr3D_gnuplot_api.o Cuboid.o Hexagon.o Drone.o Surface.o
 
 ####DIRS###
 TRG_DIR=./
@@ -24,7 +24,7 @@ OBJ = $(patsubst %,$(OBJ_DIR)/%,$(_OBJ))
 
 all: build start
 
-build: $(TARGET)
+build: obj_mk $(TARGET)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -32,7 +32,11 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS)
 $(TARGET): $(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)
 
-.PHONY: clean
+
+.PHONY: clean obj_mk
+
+obj_mk:
+	mkdir -p obj
 
 clean:
 	rm -f ${TRGDIR}$(TARGET) ${OBJ_DIR}/*

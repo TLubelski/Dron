@@ -406,3 +406,4 @@ std::istream &operator>>(std::istream &strm, Matrix<TYPE, SIZE> &M)
     }
     return strm;
 }
+

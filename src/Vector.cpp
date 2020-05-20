@@ -240,3 +240,4 @@ istream & operator>>(istream &strm, Vector<TYPE,SIZE> &V)
 
     return strm;
 }
+

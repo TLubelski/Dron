@@ -1,16 +1,19 @@
 #ifndef ROTATION_HH
 #define ROTATION_HH
 
+/*!
+ * \file Rotation.hh
+ * File contains Rotation class definition
+ */
+
 #include "cmp.hh"
 #include "Matrix.hh"
 #include <cmath>
-
 
 /*!
 * \brief Enum to set rotation angle
 */
 enum Axis{X_axis = 'x', Y_axis = 'y', Z_axis = 'z'};
-
 
 /*********************************
   \brief Class of rotation matrix

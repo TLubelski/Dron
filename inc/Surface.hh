@@ -1,12 +1,16 @@
 #ifndef SURFACE_HH
 #define SURFACE_HH
 
+/*!
+ * \file Surface.hh
+ * File contains Surface, Bottom and Water class definition
+ */
+
 #include "Vector.hh"
 #include "Drawable.hh"
 
 #include <cstdlib>
 #include <ctime>
-
 
 /****************************************
  \brief Class of drawable surface

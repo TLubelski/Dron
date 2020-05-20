@@ -1,9 +1,13 @@
 #ifndef SOLID_HH
 #define SOLID_HH
 
+/*!
+ * \file Solid.hh
+ * File contains Solid class definition
+ */
+
 #include "Drawable.hh"
 #include "Rotation.hh"
-
 
 /****************************************
  \brief Class of Solid geometry object
@@ -48,7 +52,7 @@ public:
      * \param shift shift Vector3D
      */
     void relocate(const Vector3D &shift)
-        { center += shift; }
+        { center += orientation * shift; }
 };
 
 
