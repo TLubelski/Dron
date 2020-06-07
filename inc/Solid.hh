@@ -32,8 +32,9 @@ protected:
      * \param color Color of figure
      */
     Solid(std::shared_ptr<drawNS::Draw3DAPI> api, Vector3D _center, std::string color = "black")
-        : Drawable(api, color), center(_center) { }
-
+        : Drawable(api, color), center(_center) 
+        { }
+        
 public:
     /*!
      * \brief deleted non-parametric constructor to force using parametric.

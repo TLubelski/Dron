@@ -4,8 +4,8 @@
 
 #Name, headers, sources
 TARGET=Drone
-_DEPS=cmp.hh size.hh Vector.hh Matrix.hh Dr3D_gnuplot_api.hh Draw3D_api_interface.hh Rotation.hh Drawable.hh Solid.hh Cuboid.hh Hexagon.hh Stone.hh Drone.hh Screw.hh Surface.hh
-_OBJ=main.o cmp.o VectorComp.o MatrixComp.o Dr3D_gnuplot_api.o Cuboid.o Hexagon.o Drone.o Surface.o
+_DEPS=cmp.hh size.hh Vector.hh Matrix.hh Dr3D_gnuplot_api.hh Draw3D_api_interface.hh Rotation.hh Drawable.hh Solid.hh Cuboid.hh Obstacle.hh Hexagon.hh Drone.hh Screw.hh Surface.hh Stone.hh Sphere.hh Bomb.hh
+_OBJ=main.o cmp.o VectorComp.o MatrixComp.o Dr3D_gnuplot_api.o Cuboid.o Hexagon.o Drone.o Surface.o Sphere.o Scene.o
 
 ####DIRS###
 TRG_DIR=./
@@ -33,7 +33,10 @@ $(TARGET): $(OBJ)
 	$(CC) -o $@ $^ $(LFLAGS)
 
 
-.PHONY: clean obj_mk
+.PHONY: clean obj_mk dox
+
+dox:
+	doxygen Doxyfile
 
 obj_mk:
 	mkdir -p obj

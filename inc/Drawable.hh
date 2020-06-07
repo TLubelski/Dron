@@ -15,6 +15,16 @@ class Drawable
 {
 protected:
     /*!
+     * \brief Stores total quantity of created objects
+     */
+    static inline unsigned int created = 0;
+    
+    /*!
+     * \brief Stores quantity of objects on scene
+     */
+    static inline unsigned int existing = 0;
+
+    /*!
      * \brief Shared pointer to gnuplot drawing api
      */
     std::shared_ptr<drawNS::Draw3DAPI> api;
@@ -35,7 +45,29 @@ protected:
      * \param _color Color of figure
      */
     Drawable(std::shared_ptr<drawNS::Draw3DAPI> _api, std::string _color = "black")
-    : api(_api), color(_color){ }
+    : api(_api), color(_color)
+    { 
+        created++;
+        existing++;
+    }
+
+    /*!
+     * \brief copy constructor
+     */
+    Drawable(const Drawable & arg)
+        : api(arg.api), color(arg.color)
+    {
+        created++;
+        existing++;
+    }
+
+    /*!
+     * \brief default destructor
+     */
+    ~Drawable()
+    {
+        existing--;
+    }
 
 public:
     /*!
@@ -65,7 +97,18 @@ public:
         draw();
     }
 
-};
+    /*!
+     * \brief Getter of total created objects
+     */
+    static int getCreated()
+        { return created; }
+    
+    /*!
+     * \brief Getter of total existing objects
+     */
+    static int getExisting()
+        { return existing; }
 
+};
 
 #endif

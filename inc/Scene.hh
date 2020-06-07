@@ -5,9 +5,14 @@
  * \file Scene.hh
  * File contains Scene class definition
  */
+#include "Dr3D_gnuplot_api.hh"
 
+#include "Obstacle.hh"
 #include "Surface.hh"
+
+#include "Drone.hh"
 #include "Stone.hh"
+#include "Bomb.hh"
 
 /*********************************************
  \brief Class of drawing scene
@@ -16,40 +21,69 @@ class Scene
 {
 private:
     /*!
-     * \brief Random generated ocean bottom
+     * \brief Stores size of map
      */
-    Bottom bottom;
-    
+    double map_radius;
+
     /*!
-     * \brief Wavy water surface
+     * \brief Shared pointer to gnuplot drawing api
      */
-    Water water;
-    
+    std::shared_ptr<drawNS::Draw3DAPI> api;
+
     /*!
-     * \brief Decoration
+     * \brief Collection of obstacles in scene (bottom, water, obstacles)
      */
-    Stone rock;
+    std::vector< std::shared_ptr<Obstacle> > obs_collection;
+
+    /*!
+     * \brief Collection of drones in scene
+     */
+    std::vector< std::shared_ptr<DroneInterface> > drone_collection;
+
+    /*!
+     * \brief Main drone pointer
+     */
+    std::shared_ptr<Drone> main_drone;
+
+    /*!
+     * \brief Setup objects on scene
+     */
+    void build_scene();
+
+    /*!
+     * \brief Current drone id
+     */
+    int drone_id;
+
+    /*!
+     * \brief Control of single drone
+     */
+    void sub_control();
+
+    /*!
+     * \brief Movement with collision checking
+     * \return Distance without collision
+     */
+    double collision_control(double distance, double angle);
 
 public:
     /*!
-     * \brief deleted non-parametric constructor to force using parametric.
+     * \brief Non-parametric constructor, also draws objects
      */
-    Scene() = delete;
-    
-    /*!
-     * \brief Parametric constructor, also draws objects
-     * \param api shared pointer to gnuplot api
-     * \param radius Radius of map in every dimension
-     */
-    Scene(std::shared_ptr<drawNS::Draw3DAPI> api, int radius)
-    : bottom(api, radius), water(api, radius),
-        rock(api, Vector3D({5, 5, -8}), 2, 2 ,2)
-    {
-        rock.rotate(Rotation(X_axis, 45));
-        rock.rotate(Rotation(Y_axis, 45));
-        rock.draw();
+    Scene()
+    : map_radius(20),
+        api(new drawNS::APIGnuPlot3D(-map_radius, map_radius, -map_radius, map_radius, -map_radius, map_radius, -1) )
+    {   
+        build_scene();
+
         api->redraw();
     }
+
+    /*!
+     * \brief Start controlling drones
+     */
+    void control();
+
 };
 
 #endif

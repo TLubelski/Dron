@@ -1,67 +1,34 @@
 #include "Drone.hh"
 
-#include <iostream>
-#include <cstdlib>
 #include <unistd.h>
 
-using namespace std;
 
-
-/*********************************
- Main Control panel
-**********************************/
-void Drone::control_panel()
+/*******************************************
+ Collision methods
+********************************************/
+double Drone::getR() const
 {
-    bool session = true;
-    int input;
+    return Vector3D({ 0.5*dims[0], 0.75*dims[1], 0.5*dims[2] }).length();
+}
 
-    double angle;
-    double distance;
+bool Drone::collisionCheck(std::shared_ptr<DroneInterface> drone, const Vector3D & step_vect) const
+{
+    //estimate next drone position
+    Vector3D next_pos = drone->getCenter() + drone->getOrient() * step_vect;
+    
+     //calculate distances
+    double V_dist = (next_pos[2]-drone->getZ()*0.5) - (center[2] + dims[2]*0.5); 
+    double H_dist = sqrt( pow(next_pos[0] - center[0],2) + pow(next_pos[1] - center[1],2) );
 
-    system("clear");
-
-    cout << "###################################" << endl
-         << "# Submarine control terminal v0.1 #" << endl
-         << "###################################" << endl
-         << "Avaible actions:" << endl
-         << "-[1]Rotate" << endl
-         << "-[2]Move" << endl
-         << "-[0]Exit" << endl; 
-
-    while(session)
-    {
-        cout << "\n# Command: ";
-        cin >> input;
-        switch (input)
-        {
-        case 1: //rotate
-            cout << "# Angle in deg ([+]left, [-]right): ";
-            cin >> angle;
-            cout << "[Action] Rotating..." << endl;
-            turn( angle);
-            cout << "[Info] Rotated " << fabs(angle) << "deg to the " << ( angle>0 ? "left." : "right.") << endl;
-            break;
+    //Drone V and H collsion checking
+    if( H_dist >= drone->getR() + getR() )
+        return false; 
+    else if( V_dist > 0.5)
+        return false;
         
-        case 2: //move
-            cout << "# Distance ([+]forward, [-]backward): ";
-            cin >> distance;
-            cout << "# Climb angle in deg ([+]up, [-]down): ";
-            cin >> angle;
-            cout << "[Action] Moving..." << endl;
-            move(distance, angle);
-            cout << "[Info] Moved " << fabs(distance) << " units " << ( distance>0 ? "forward" : "backward") << " with " << angle << "deg climb angle." << endl;
-            break;
-
-        case 0: //exit
-            cout << "[Info] Logged out." << endl;
-            session = false;
-            break;
-
-        default:
-            cout << "[Error] Undefined command." << endl;
-            break;
-        }
-    }
+    //Message
+    std::cout << "[Warning] Another drone detected! Stopping to avoid collision." << std::endl;
+    return true;
 }
 
 /*******************************************
@@ -93,31 +60,19 @@ void Drone::turn(double angle)
     }
 }
 
-void Drone::move(double distance, double angle)
-{
-    double step = 0.1;
-    
-    if(distance < 0) //backward move
-    {
-        step *= (-1); 
-        angle = -angle; 
-    } 
-
-    
-    Vector3D step_vect({0, step ,0});
-    step_vect = Rotation(X_axis, angle) * step_vect;
-
-    for (double i = 0; i <= fabs(distance); i += fabs(step))
-    {   
-        relocate( step_vect );
-        redraw();
-        screw_R.animate_frame(center, orientation);
-        screw_L.animate_frame(center, orientation);
-        api->redraw();
-        next_frame();
-    }
+void Drone::move_frame(const Vector3D & step_vect)
+{   
+    relocate( step_vect );
+    redraw();
+    screw_R.animate_frame(center, orientation);
+    screw_L.animate_frame(center, orientation);
+    api->redraw();
+    next_frame();
 }
 
+/*******************************************
+ Timing method
+********************************************/
 #define FPS 60
 
 void Drone::next_frame() const

@@ -15,6 +15,9 @@ Vector<TYPE, SIZE>::Vector()
 {
     for (int i = 0; i < SIZE; i++)
         data[i] = 0;
+
+    existing++;
+    created++;
 }
 
 /********************
@@ -32,6 +35,22 @@ Vector<TYPE, SIZE>::Vector(std::initializer_list<TYPE> list)
     int i = 0;
     for (auto arg : list)
         this->data[i++] = arg;
+
+    existing++;
+    created++;
+}
+
+/********************
+  Copy constructor 
+********************/
+template <typename TYPE, int SIZE>
+Vector<TYPE, SIZE>::Vector(const Vector & arg)
+{
+    for( int i = 0; i < SIZE; i++)
+        data[i] = arg[i];
+
+    created++;
+    existing++;
 }
 
 /**********************

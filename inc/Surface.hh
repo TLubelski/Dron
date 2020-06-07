@@ -8,6 +8,8 @@
 
 #include "Vector.hh"
 #include "Drawable.hh"
+#include "Obstacle.hh"
+#include "Drone.hh"
 
 #include <cstdlib>
 #include <ctime>
@@ -47,7 +49,7 @@ public:
 /****************************************
  \brief Class of bottom surface
 *****************************************/
-class Bottom : public Surface
+class Bottom : public Surface, public Obstacle
 {
 protected:
     /*!
@@ -58,7 +60,12 @@ protected:
     /*!
      * \brief Calculate locations of vertexes
      */
-    void calculateGemoetry(int radius);
+    void calculateGemoetry(int radius, int grid_step);
+
+    /*!
+     * \brief Stores map size
+     */
+    int map_radius;
 
 public:
     /*!
@@ -72,11 +79,21 @@ public:
      * \param radius Radius of map in every dimension
      */
     Bottom(std::shared_ptr<drawNS::Draw3DAPI> api, int radius)
-    : Surface(api, "yellow")
+    : Surface(api, "yellow"), map_radius(radius)
     { 
-        calculateGemoetry(radius);
+        int step = radius/10;
+        if( step == 0) step = 1; //small map protection
+        
+        calculateGemoetry(radius, step);
         draw();
     }
+
+    /*!
+     * \brief Virtual override method to check collision with main drone
+     * \param drone shared_ptr to main drone
+     * \param step_vect estimiation of next drone relocation
+     */
+    virtual bool collisionCheck(std::shared_ptr<DroneInterface> drone, const Vector3D & step_vect) const override;
 
 };
 
@@ -84,7 +101,7 @@ public:
 /****************************************
  \brief Class of water surface
 *****************************************/
-class Water : public Surface
+class Water : public Surface, public Obstacle
 {
 protected:
     /*!
@@ -95,7 +112,12 @@ protected:
     /*!
      * \brief Calculate locations of vertexes
      */
-    void calculateGemoetry(int radius);
+    void calculateGemoetry(int radius, int grid_step);
+
+    /*!
+     * \brief Stores map size
+     */
+    int map_radius;
 
 public:
     /*!
@@ -109,12 +131,22 @@ public:
      * \param radius Radius of map in every dimension
      */
     Water(std::shared_ptr<drawNS::Draw3DAPI> api, int radius)
-    : Surface(api, "blue") 
+    : Surface(api, "blue"), map_radius(radius)
     { 
-        calculateGemoetry(radius);
+        int step = radius/10; 
+        if( step == 0) step = 1; //small map protection
+
+        calculateGemoetry(radius, step);
         draw();
     }
+
+    /*!
+     * \brief Virtual override method to check collision with main drone
+     * \param drone shared_ptr to main drone
+     * \param step_vect estimiation of next drone relocation
+     */
+    virtual bool collisionCheck(std::shared_ptr<DroneInterface> drone, const Vector3D & step_vect) const override;
+
 };
 
- 
 #endif

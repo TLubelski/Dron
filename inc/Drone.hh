@@ -8,15 +8,40 @@
 
 #include "Cuboid.hh"
 #include "Screw.hh"
+#include "Obstacle.hh"
 
-/*********************************************
- \brief Class of Drone control interface [WIP]
-**********************************************/
+/***************************************************
+ \brief Class of DroneInterface (used in collisions)
+****************************************************/
 class DroneInterface
 {
 public:
-    DroneInterface(){}
-    virtual void control_panel() = 0;
+    /*!
+     * \brief Pure Virtual Getter of center point
+     */
+    virtual Vector3D getCenter() const = 0;
+    
+    /*!
+     * \brief Pure Virtual Getter of drone orientation matrix
+     */
+    virtual Rotation getOrient() const = 0;
+
+    /*!
+     * \brief Pure Virtual Getter of drone Z dimension
+     */
+    virtual double getZ() const = 0;
+
+    /*!
+     * \brief Pure Virtual Getter of shape radius
+     */
+    virtual double getR() const = 0;
+
+    /*!
+     * \brief Pure Virtual method for checking collision with another drones
+     * \param drone shared_ptr to main drone
+     * \param step_vect estimiation of next drone relocation
+     */
+    virtual bool collisionCheck(std::shared_ptr<DroneInterface> drone, const Vector3D & step_vect) const = 0;
 };
 
 
@@ -56,19 +81,13 @@ public:
      * \param z_dim Z dimension of Drone figure
      * \param color Color of Drone
      */
-    Drone(std::shared_ptr<drawNS::Draw3DAPI> _api, double x_dim, double y_dim, double z_dim, std::string color = "black")
-        : Cuboid(_api, Vector3D({0,0,0}), x_dim, y_dim, z_dim, color),
+    Drone(std::shared_ptr<drawNS::Draw3DAPI> _api, Vector3D _center, double x_dim, double y_dim, double z_dim, std::string color = "black")
+        : Cuboid(_api, _center, x_dim, y_dim, z_dim, color),
             screw_L(_api, center, x_dim, y_dim, z_dim, side_L, color),
             screw_R(_api, center, x_dim, y_dim, z_dim, side_R, color)
         { 
             draw(); 
-            api->redraw(); 
         }
-
-    /*!
-     * \brief Main command line of Drone
-     */
-    void control_panel() override;
 
     /*!
      * \brief Turning Drone with animation
@@ -77,11 +96,43 @@ public:
     void turn( double angle);
 
     /*!
-     * \brief Moving Drone with animation
-     * \param distance Distance to move
+     * \brief Moving 1 frame of drone animation
+     * \param step distance to go
      * \param angle Angle of climbing in deg
      */
-    void move( double distance, double angle );
+    void move_frame( const Vector3D & step_vect);
+
+    /*!
+     * \brief Virtual Getter override of center point
+     */
+    virtual Vector3D getCenter() const override
+        { return center; }
+
+    /*!
+     * \brief Virtual Getter override of drone orientation matrix
+     */
+    virtual Rotation getOrient() const override
+        { return orientation; }
+
+    /*!
+     * \brief Virtual Getter override of drone Z dimension
+     */
+    virtual double getZ() const override
+        { return dims[2]; }
+
+    /*!
+     * \brief Virtual Getter override of shape radius
+     */
+    virtual double getR() const;
+
+    /*!
+     * \brief Virtual method override for checking collision with another drones
+     * \param drone shared_ptr to main drone
+     * \param step_vect estimiation of next drone relocation
+     */
+    virtual bool collisionCheck(std::shared_ptr<DroneInterface> drone, const Vector3D & step_vect) const override;
+
+
 };
 
 

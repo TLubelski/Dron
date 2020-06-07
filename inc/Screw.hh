@@ -70,7 +70,7 @@ public:
                 step = -step;
             }
             rotate(Rotation(X_axis, 90));
-            center = screw2drone;
+            center = d_center + screw2drone;
 
             draw();
         }    

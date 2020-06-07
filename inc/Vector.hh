@@ -24,6 +24,16 @@ protected:
      */
     TYPE data[SIZE];
 
+    /*!
+     * \brief Stores total quantity of created Vectors
+     */
+    static inline unsigned int created = 0;
+    
+    /*!
+     * \brief Stores quantity of Vectors on scene
+     */
+    static inline unsigned int existing = 0;
+
 public:
     /*!
      * \brief Default constructor set (0,0,0)
@@ -35,6 +45,26 @@ public:
      * \param list list for TYPE parameters
      */
     Vector(std::initializer_list <TYPE> list);
+
+    /*!
+     * \brief Copy constructor
+     */
+    Vector(const Vector & arg);
+
+    /*!
+     * \brief Default destructor
+     */
+    ~Vector(){ existing--; }
+
+    /*!
+     * \brief Getter of total created Vectors
+     */
+    static int getCreated(){ return created; }
+    
+    /*!
+     * \brief Getter of total existing vectors
+     */
+    static int getExisting(){ return existing; }
 
     /*!
      * \brief Read operator[]
