@@ -139,14 +139,14 @@ double Scene::collision_control(double distance, double angle)
     for (double i = 0; i <= fabs(distance) && !collision; i += fabs(step))
     {
         //checking collision with static obstacles
-        for(int j = 0; j < (int)drone_collection.size() && !collision; j++)
-            collision = drone_collection[i]->collisionCheck( main_drone, step_vect);
+        for(int j = 0; j < (int)obs_collection.size() && !collision; j++)
+            collision = obs_collection[j]->collisionCheck( main_drone, step_vect);
     
         //checking collision with drones
         for(int j = 0; j < (int)drone_collection.size() && !collision; j++)
         {
             if(j != drone_id) //skip itself
-                collision = drone_collection[i]->collisionCheck( main_drone, step_vect );
+                collision = drone_collection[j]->collisionCheck( main_drone, step_vect );
         }
         
         //move if no collision
