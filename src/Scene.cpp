@@ -27,6 +27,7 @@ void Scene::build_scene()
 void Scene::control()
 {
     bool session = true; //active session indicator
+    std::string input;
     int selection;
 
     system("clear");
@@ -41,8 +42,8 @@ void Scene::control()
             << "[1]Red [2]Purple [3]Green [0]Exit" << endl << endl
             << "# ID: ";
 
-        cin >> selection;
-
+        cin >> input;
+        selection = atoi(input.c_str());
         switch (selection)
         {
         case 1: //correct choice
@@ -71,7 +72,8 @@ void Scene::control()
 void Scene::sub_control()
 {
     bool session = true; //active session indicator
-    int input;
+    std::string input;
+    int selection;
 
     double angle;
     double distance;
@@ -86,7 +88,8 @@ void Scene::sub_control()
     {
         cout << "\n# Command: ";
         cin >> input;
-        switch (input)
+        selection = atoi(input.c_str());
+        switch (selection)
         {
         case 1: //rotate
             cout << "# Angle in deg ([+]left, [-]right): ";
