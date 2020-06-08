@@ -17,13 +17,13 @@ bool Drone::collisionCheck(std::shared_ptr<DroneInterface> drone, const Vector3D
     Vector3D next_pos = drone->getCenter() + drone->getOrient() * step_vect;
     
      //calculate distances
-    double V_dist = (next_pos[2]-drone->getZ()*0.5) - (center[2] + dims[2]*0.5); 
+    double V_dist = fabs(next_pos[2] - center[2]); 
     double H_dist = sqrt( pow(next_pos[0] - center[0],2) + pow(next_pos[1] - center[1],2) );
 
     //Drone V and H collsion checking
-    if( H_dist >= drone->getR() + getR() )
+    if( H_dist + 0.5 >= drone->getR() + getR())
         return false; 
-    else if( V_dist > 0.5)
+    else if( V_dist >= getZ()*0.5 + dims[2]*0.5 + 0.5)
         return false;
         
     //Message
